@@ -15,16 +15,29 @@ const app = new Vue({
       { id: 3, name: '関西' }
     ],
     confirmView: false,
+    // モーダルの表示状態を管理するプロパティを追加
+    modalView: false,
   },
   methods: {
     openCheckArea() {
-      // 要件2の改修
-      if (!this.validation) return false;
-      this.confirmView = true;
+      // validationがfalseの場合はmodalViewをtrueにするメソッドを実行
+      if (!this.validation) {
+        this.showModal();
+      } else {
+        this.confirmView = true;
+      }
     },
     closeCheckArea() {
       this.confirmView = false;
     }
+  },
+  // modalViewをtrueにするメソッドを追加
+  showModal() {
+    this.modalView = true;
+  },
+  // modalViewをfalseにするメソッドを追加
+  hideModal() {
+    this.modalView = false;
   },
   computed: {
     // 要件1の改修
