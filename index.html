@@ -12,57 +12,61 @@
         <h1>CONTACT</h1>
         <p>お問い合わせ</p>
       </div>
-      
-      <!-- formData.emailの値が空（未入力）またはformData.emailConfirmの値が空（未入力）の場合は入力を促すメッセージを表示 -->
-      <p v-if="formData.email === '' || formData.emailConfirm === ''" >
-        EメールフォームとEメール(確認)フォームを入力してください
-      </p>
-      <!-- v-ifの条件に当てはまらず、値が異なっている場合はエラーメッセージを表示 -->
-      <p v-else-if="formData.email !== formData.emailConfirm" class="alert_color">
-        {{ errorMessage }}
-      </p>
-      <!-- それ以外の場合（入力されており、かつ値が同じ場合）のメッセージ -->
-      <p v-else>正しく入力できています</p>
-
+      <p v-if="!validation" class="alert_color">{{ errorMessage }}</p>
       <form action="#" method="POST" id="form">
         <table class="contact" id="table">
           <tr class="contact_line">
             <td class="contact_sign"><label for="name">お名前</label></td>
-            <td class="contact_input"><input v-model="formData.name" type="text" name="name" id="name"></td>
+            <td class="contact_input">
+              <input v-model="formData.name" type="text" name="name" id="name">
+            </td>
           </tr>
           <tr class="contact_line">
             <td class="contact_sign"><label for="name">地域</label></td>
             <td class="contact_input">
-              <select>
-                  <option v-for="region in regions" :key="region.id">{{ region.id }}.{{ region.name }}</option>
+              <select v-model="formData.region">
+                <option v-for="region in regions" :key="region.id">{{ region.id }}.{{ region.name }}</option>
               </select>
             </td>
           </tr>
           <tr class="contact_line">
             <td class="contact_sign"><label for="name">Eメール</label></td>
-            <td class="contact_input"><input v-bind:class="{ alert_bg: formData.email !== formData.emailConfirm }" v-model="formData.email" type="email" name="email" id="email"></td>
+            <td class="contact_input">
+              <!-- 要件3の改修 -->
+              <input v-model="formData.email" :class="errorClass" type="email" name="email" id="email">
+            </td>
           </tr>
           <tr class="contact_line">
             <td class="contact_sign"><label for="name">Eメール(確認)</label></td>
-            <td class="contact_input"><input v-bind:class="{ alert_bg: formData.email !== formData.emailConfirm }" v-model="formData.emailConfirm" type="email" name="email_confirm" id="email_confirm"></td>
+            <td class="contact_input">
+              <!-- 要件3の改修 -->
+              <input v-model="formData.emailConfirm" :class="errorClass" type="email" name="email_confirm" id="email_confirm">
+            </td>
           </tr>
           <tr class="contact_content" id="content_field">
             <td class="contact_sign"><label for="content">内容</label></td>
-            <td class="contact_input"><textarea name="content" id="content"></textarea></td>
+            <td class="contact_input">
+              <textarea v-model="formData.content" name="content" id="content"></textarea>
+            </td>
           </tr>
         </table>
-        <div class="contact_btn_area">
+        <div v-if="!confirmView" class="contact_btn_area">
           <button type="reset" class="contact_btn reset_btn">リセット</button>
-          <button type="submit" class="contact_btn submit_btn">送信する</button>
+          <button @click.prevent="openCheckArea" type="submit" class="contact_btn submit_btn">確認</button>
         </div>
       </form>
-
-      <!-- 入力内容を表示するエリアを作成 -->
-      <section class="contact_confirm">
+      <section v-if="confirmView" class="contact_confirm">
         <h2>ご記入内容の確認</h2>
         <p><span class="bold">お名前:　</span><span>{{ formData.name }}</span></p>
+        <p><span class="bold">地域:　</span><span>{{ formData.region }}</span></p>
+        <p><span class="bold">Eメール:　</span><span>{{ formData.email }}</span></p>
+        <p><span class="bold">Eメール(確認):　</span><span>{{ formData.emailConfirm }}</span></p>
+        <p><span class="bold">内容:　</span><span>{{ formData.content }}</span></p>
+        <div class="contact_btn_area">
+          <button @click="closeCheckArea" class="contact_btn reset_btn">閉じる</button>
+          <button type="submit" class="contact_btn submit_btn">送信</button>
+        </div>
       </section>
-
     </section>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script type="text/javascript" src="javascripts/validation.js"></script>
