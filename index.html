@@ -12,14 +12,7 @@
         <h1>CONTACT</h1>
         <p>お問い合わせ</p>
       </div>
-      <div v-if="modalView" class="modal_back">
-        <div class="modal_body">
-          <p class="modal_sign">エラーがあります</p>
-          <p class="alert_color">{{ errorMessage }}</p>
-          <!-- button要素にclickイベントを追加 -->
-          <button @click="hideModal">close</button>
-        </div>
-      </div>
+      <common-modal v-if="modalView" :message="errorMessage" @close="hideModal"></common-modal>
       <p v-if="!validation" class="alert_color">{{ errorMessage }}</p>
       <form action="#" method="POST" id="form">
         <table class="contact" id="table">
@@ -33,22 +26,20 @@
             <td class="contact_sign"><label for="name">地域</label></td>
             <td class="contact_input">
               <select v-model="formData.region">
-                <option v-for="region in regions" :key="region.id">{{ region.id }}.{{ region.name }}</option>
+                <option v-for="region in regions" :key="region.id">{{ region.name }}</option>
               </select>
             </td>
           </tr>
           <tr class="contact_line">
             <td class="contact_sign"><label for="name">Eメール</label></td>
             <td class="contact_input">
-              <!-- 要件3の改修 -->
-              <input v-model="formData.email" :class="errorClass" type="email" name="email" id="email">
+              <input v-model="formData.email" :class="errorClass" type="email" name="email" id="email" autocomplete="off">
             </td>
           </tr>
           <tr class="contact_line">
             <td class="contact_sign"><label for="name">Eメール(確認)</label></td>
             <td class="contact_input">
-              <!-- 要件3の改修 -->
-              <input v-model="formData.emailConfirm" :class="errorClass" type="email" name="email_confirm" id="email_confirm">
+              <input v-model="formData.emailConfirm" :class="errorClass" type="email" name="email_confirm" id="email_confirm"  autocomplete="off">
             </td>
           </tr>
           <tr class="contact_content" id="content_field">
@@ -79,3 +70,4 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script type="text/javascript" src="javascripts/validation.js"></script>
   </body>
+</html>

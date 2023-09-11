@@ -1,3 +1,28 @@
+Vue.component('common-modal', {
+  data: function () {
+    return {
+      defaultMessage:'入力エラーがあります',
+    }
+  },
+  props: {
+    message: String,
+  },
+  methods: {
+    closeModal(){
+      this.$emit('close');
+    }
+  },
+  template: `
+  <div class="modal_back">
+    <div class="modal_body">
+      <p class="modal_sign">{{defaultMessage}}</p>
+      <p class="alert_color">{{message}}</p>
+      <button @click="closeModal">close</button>
+    </div>
+  </div>
+  `
+})
+ 
 const app = new Vue({
   el: '#app',
   data: {
@@ -15,12 +40,18 @@ const app = new Vue({
       { id: 3, name: '関西' }
     ],
     confirmView: false,
-    // モーダルの表示状態を管理するプロパティを追加
     modalView: false,
+  },
+  computed: {
+    validation: function() {
+      return this.formData.email === '' || this.formData.emailConfirm === '' || this.formData.email === this.formData.emailConfirm
+    },
+    errorClass: function() {
+      return this.validation ? false : "alert_bg";
+    }
   },
   methods: {
     openCheckArea() {
-      // validationがfalseの場合はmodalViewをtrueにするメソッドを実行
       if (!this.validation) {
         this.showModal();
       } else {
@@ -29,24 +60,12 @@ const app = new Vue({
     },
     closeCheckArea() {
       this.confirmView = false;
-    }
-  },
-  // modalViewをtrueにするメソッドを追加
-  showModal() {
-    this.modalView = true;
-  },
-  // modalViewをfalseにするメソッドを追加
-  hideModal() {
-    this.modalView = false;
-  },
-  computed: {
-    // 要件1の改修
-    validation: function() {
-      return this.formData.email === '' || this.formData.emailConfirm === '' || this.formData.email === this.formData.emailConfirm
     },
-    // 要件3の改修
-    errorClass: function() {
-      return this.validation ? false : 'alert_bg';
+    showModal() {
+      this.modalView = true;
+    },
+    hideModal() {
+      this.modalView = false;
     }
-  },
+  }
 })
